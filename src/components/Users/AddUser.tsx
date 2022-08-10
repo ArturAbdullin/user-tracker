@@ -1,9 +1,15 @@
 import React, { FC, useState } from "react";
+import { AppUser } from "../../models/appUser";
+import { AddUserEventHandler } from "../../models/eventHandlers";
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import styles from "./AddUser.module.css";
 
-const AddUser: FC = (props) => {
+type AddUserProps = {
+  onAddUser?: AddUserEventHandler;
+};
+
+const AddUser: FC<AddUserProps> = (props) => {
   const [enteredUsername, setEnteredUsername] = useState<string>("");
   const [enteredUserage, setEnteredUserage] = useState<string>("");
 
@@ -16,7 +22,9 @@ const AddUser: FC = (props) => {
       return;
     }
     if (+enteredUserage < 1) return;
-    console.log(enteredUsername, enteredUserage);
+    
+    props.onAddUser?.(new AppUser(enteredUsername, +enteredUserage));
+    
     setEnteredUsername("");
     setEnteredUserage("");
   };
