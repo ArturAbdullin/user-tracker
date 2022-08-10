@@ -4,7 +4,11 @@ import AddUser from "./components/Users/AddUser";
 import "./index.css";
 
 function App() {
-  return <></>;
+  return (
+    <>
+      <AddUser />
+    </>
+  );
 }
 
 export default App;
