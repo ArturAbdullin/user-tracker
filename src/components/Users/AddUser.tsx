@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useRef } from "react";
 import { AppUser } from "../../models/appUser";
 import { AddUserEventHandler } from "../../models/eventHandlers";
 import { InputError } from "../../models/inputError";
@@ -12,15 +12,19 @@ type AddUserProps = {
 };
 
 const AddUser: FC<AddUserProps> = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState<string>("");
-  const [enteredUserage, setEnteredUserage] = useState<string>("");
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const ageInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<InputError>();
 
   const addUserHandler: React.FormEventHandler = (event) => {
     event.preventDefault();
+    const enteredName = nameInputRef.current?.value;
+    const enteredAge = ageInputRef.current?.value;
     if (
-      enteredUsername.trim().length === 0 ||
-      enteredUserage.trim().length === 0
+      !enteredName ||
+      !enteredAge ||
+      enteredName.trim().length === 0 ||
+      enteredAge.trim().length === 0
     ) {
       setError(
         new InputError(
@@ -30,27 +34,17 @@ const AddUser: FC<AddUserProps> = (props) => {
       );
       return;
     }
-    if (+enteredUserage < 1) {
+    if (+enteredAge < 1) {
       setError(new InputError("Invalid age", "Please enter a valid age (> 0)"));
       return;
     }
 
-    props.onAddUser?.(new AppUser(enteredUsername, +enteredUserage));
+    props.onAddUser?.(new AppUser(enteredName, +enteredAge));
 
-    setEnteredUsername("");
-    setEnteredUserage("");
-  };
-
-  const usernameChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
-    setEnteredUsername(event.target.value);
-  };
-
-  const userageChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
-    event
-  ) => {
-    setEnteredUserage(event.target.value);
+    // not a good idea to manipulate
+    // the ref value directly
+    nameInputRef.current.value = '';
+    ageInputRef.current.value = '';
   };
 
   const errorHandler = () => {
@@ -69,19 +63,9 @@ const AddUser: FC<AddUserProps> = (props) => {
       <Card className={styles.input}>
         <form onSubmit={addUserHandler}>
           <label htmlFor="userName">Username</label>
-          <input
-            value={enteredUsername}
-            id="userName"
-            type="text"
-            onChange={usernameChangeHandler}
-          />
+          <input id="userName" type="text" ref={nameInputRef} />
           <label htmlFor="userAge">Age (Years)</label>
-          <input
-            value={enteredUserage}
-            id="userAge"
-            type="number"
-            onChange={userageChangeHandler}
-          />
+          <input id="userAge" type="number" ref={ageInputRef} />
           <Button type="submit">Add User</Button>
         </form>
       </Card>
