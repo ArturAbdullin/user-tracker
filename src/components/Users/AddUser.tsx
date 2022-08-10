@@ -9,7 +9,16 @@ const AddUser: FC = (props) => {
 
   const addUserHandler: React.FormEventHandler = (event) => {
     event.preventDefault();
+    if (
+      enteredUsername.trim().length === 0 ||
+      enteredUserage.trim().length === 0
+    ) {
+      return;
+    }
+    if (+enteredUserage < 1) return;
     console.log(enteredUsername, enteredUserage);
+    setEnteredUsername("");
+    setEnteredUserage("");
   };
 
   const usernameChangeHandler: React.ChangeEventHandler<HTMLInputElement> = (
@@ -28,9 +37,19 @@ const AddUser: FC = (props) => {
     <Card className={styles.input}>
       <form onSubmit={addUserHandler}>
         <label htmlFor="userName">Username</label>
-        <input id="userName" type="text" onChange={usernameChangeHandler} />
+        <input
+          value={enteredUsername}
+          id="userName"
+          type="text"
+          onChange={usernameChangeHandler}
+        />
         <label htmlFor="userAge">Age (Years)</label>
-        <input id="userAge" type="number" onChange={userageChangeHandler} />
+        <input
+          value={enteredUserage}
+          id="userAge"
+          type="number"
+          onChange={userageChangeHandler}
+        />
         <Button type="submit">Add User</Button>
       </form>
     </Card>
