@@ -58,7 +58,7 @@ const AddUser: FC<AddUserProps> = (props) => {
   };
 
   return (
-    <div>
+    <>
       {error && (
         <ErrorModal
           title={error.title}
@@ -85,7 +85,7 @@ const AddUser: FC<AddUserProps> = (props) => {
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </>
   );
 };
 
